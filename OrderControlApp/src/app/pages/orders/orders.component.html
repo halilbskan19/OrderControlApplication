@@ -41,6 +41,17 @@
             </option>
         </select>
     </div>
+    <div>
+        <mat-form-field>
+            <mat-label>Tarih Aralığı</mat-label>
+            <mat-date-range-input [formGroup]="dateRangeFormGroup" [rangePicker]="picker">
+                <input matStartDate formControlName="start">
+                <input matEndDate formControlName="end">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+    </div>
     <button class="btn btn-primary" (click)="applyFilters()">Uygula</button>
     <button class="btn btn-secondary" (click)="clearFilters()">Filtreyi Temizle</button>
 </div>

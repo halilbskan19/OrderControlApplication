@@ -5,6 +5,8 @@ import { OrdersService } from 'src/app/services/orders.service';
 import { switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 import { DistributionStatus, Status } from 'src/app/models/enums/status.enum';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
 
 @Component({
 	selector: 'app-orders',
@@ -23,12 +25,15 @@ export class OrdersComponent implements OnInit {
 	itemsPerPageOptions: number[] = [5, 10, 20];
 	filterOrderTrackingNo: string = ''; // Filtreleme için değişken
 	filter = {
-        orderTrackingNo: '',
-        shipmentTrackingNo: '',
-        plate: '',
-        status: null,
+		orderTrackingNo: '',
+		shipmentTrackingNo: '',
+		plate: '',
+		startDate: null,
+		endDate: null,
+		status: null,
 		distributionStatus: null
-    };
+	};
+	dateRangeFormGroup: FormGroup;
     
     statusOptions = [
         { value: Status.Created, label: 'Oluşturuldu' },
@@ -43,7 +48,13 @@ export class OrdersComponent implements OnInit {
         { value: DistributionStatus.No, label: 'Hayır' },
     ];
 
-	constructor(private ordersService: OrdersService, private router: Router) { }
+	constructor(private ordersService: OrdersService, private router: Router, private fb: FormBuilder, private dateAdapter: DateAdapter<Date>) { 
+        this.dateRangeFormGroup = this.fb.group({
+			start: [null],
+			end: [null]
+		});
+        this.dateAdapter.setLocale('tr'); // Türkçe tarih formatı
+    }
 
 	ngOnInit() {
 		this.loadData();
@@ -114,6 +125,15 @@ export class OrdersComponent implements OnInit {
                 order.releasedForDistribution === this.filter.distributionStatus
             );
         }
+
+        if (this.dateRangeFormGroup.value.start && this.dateRangeFormGroup.value.end) {
+			const startDate = new Date(this.dateRangeFormGroup.value.start);
+			const endDate = new Date(this.dateRangeFormGroup.value.end);
+			filteredOrders = filteredOrders.filter(order => {
+				const orderDate = new Date(order.Date);
+				return orderDate >= startDate && orderDate <= endDate;
+			});
+		}
     
 		// Filtrelenen verileri güncelle ve sayfalama işlemini uygula
         this.ordersData = filteredOrders;
@@ -125,12 +145,16 @@ export class OrdersComponent implements OnInit {
 	clearFilters() {
 		// Filtre alanlarını temizle
 		this.filter = {
-            orderTrackingNo: '',
-            shipmentTrackingNo: '',
-            plate: '',
-            status: null,
-            distributionStatus: null
-        };
+			orderTrackingNo: '',
+			shipmentTrackingNo: '',
+			plate: '',
+			startDate: null,
+			endDate: null,
+			status: null,
+			distributionStatus: null
+		};
+
+        this.dateRangeFormGroup.reset();
     
 		// Orijinal sipariş verilerini tekrar yükle
 		this.ordersData = this.allOrdersData; // Tüm sipariş verileri orijinal listeyi tutuyor
