@@ -17,6 +17,7 @@ import { OrdersComponent } from './pages/orders/orders.component';
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { OrderDetailComponent } from './pages/order-detail/order-detail.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
     BadgeComponent,
     HeaderComponent,
     OrdersComponent,
-    LoadingBarComponent
+    LoadingBarComponent,
+    OrderDetailComponent
   ],
   imports: [
     BrowserModule,

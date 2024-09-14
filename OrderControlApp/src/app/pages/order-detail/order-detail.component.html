@@ -1,2 +1,16 @@
 <h1>Sipariş Detayı</h1>
-<p>Sipariş No: {{ orderTrackingNo }}</p>
+<div *ngIf="order; else noOrder">
+    <p>Date: {{ order.Date }}</p>
+    <p>Statu: {{ order.Statu }}</p>
+    <p>customerName: {{ order.customerName }}</p>
+    <p>district: {{ order.district }}</p>
+    <p>id: {{ order.id }}</p>
+    <p>orderNo: {{ order.orderNo }}</p>
+    <p>orderTrackingNo: {{ order.orderTrackingNo }}</p>
+    <p>plate: {{ order.plate }}</p>
+    <p>releasedForDistribution: {{ order.releasedForDistribution }}</p>
+    <p>shipmentTrackingNo: {{ order.shipmentTrackingNo }}</p>
+</div>
+<ng-template #noOrder>
+    <p>Bu sipariş numarasına sahip bir sipariş bulunamadı.</p>
+</ng-template>
