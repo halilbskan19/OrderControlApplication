@@ -1,0 +1,343 @@
+{
+    "header": {
+        "packetRoute": 721,
+        "DMPackageCount": 367,
+        "packageReleased": 250,
+        "delivered": 120,
+        "notDelivered": 20,
+        "completedOrder": "400/300"
+    },
+    "dataTable": [
+        {
+            "orderNo": 1,
+            "shipmentTrackingNo": "ASD",
+            "orderTrackingNo": "1001",
+            "customerName": "Ali Sarı",
+            "district": "Tuzla",
+            "plate": "34AA123",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-11T16:21:16.918105"
+        },
+        {
+            "orderNo": 2,
+            "shipmentTrackingNo": "XYZ",
+            "orderTrackingNo": "1002",
+            "customerName": "Ahmet Yılmaz",
+            "district": "Kadıköy",
+            "plate": "34BB456",
+            "Statu": "1",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-12T09:30:22.123456"
+        },
+        {
+            "orderNo": 3,
+            "shipmentTrackingNo": "LMN",
+            "orderTrackingNo": "1003",
+            "customerName": "Mehmet Kara",
+            "district": "Üsküdar",
+            "plate": "34CC789",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-12T10:45:00.654321"
+        },
+        {
+            "orderNo": 4,
+            "shipmentTrackingNo": "PQR",
+            "orderTrackingNo": "1004",
+            "customerName": "Fatma Güneş",
+            "district": "Beşiktaş",
+            "plate": "34,DD321",
+            "Statu": "2",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-12T12:15:45.987654"
+        },
+        {
+            "orderNo": 5,
+            "shipmentTrackingNo": "EFG",
+            "orderTrackingNo": "1005",
+            "customerName": "Hakan Demir",
+            "district": "Kartal",
+            "plate": "34EE654",
+            "Statu": "3",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-12T13:30:20.123456"
+        },
+        {
+            "orderNo": 6,
+            "shipmentTrackingNo": "HIJ",
+            "orderTrackingNo": "1006",
+            "customerName": "Ayşe Ak",
+            "district": "Maltepe",
+            "plate": "34FF987",
+            "Statu": "4",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-12T14:45:10.987654"
+        },
+        {
+            "orderNo": 7,
+            "shipmentTrackingNo": "KLM",
+            "orderTrackingNo": "1007",
+            "customerName": "Seda Yıldız",
+            "district": "Ataşehir",
+            "plate": "34GG321",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-12T15:15:25.456789"
+        },
+        {
+            "orderNo": 8,
+            "shipmentTrackingNo": "NOP",
+            "orderTrackingNo": "1008",
+            "customerName": "Berk Gül",
+            "district": "Şişli",
+            "plate": "34HH654",
+            "Statu": "1",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-12T16:00:05.654321"
+        },
+        {
+            "orderNo": 9,
+            "shipmentTrackingNo": "QRS",
+            "orderTrackingNo": "1009",
+            "customerName": "Zeynep Çelik",
+            "district": "Beyoğlu",
+            "plate": "34II987",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-12T17:25:40.321654"
+        },
+        {
+            "orderNo": 10,
+            "shipmentTrackingNo": "TUV",
+            "orderTrackingNo": "1010",
+            "customerName": "Murat Altın",
+            "district": "Bakırköy",
+            "plate": "34JJ123",
+            "Statu": "2",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-12T18:15:55.987654"
+        },
+        {
+            "orderNo": 11,
+            "shipmentTrackingNo": "WXY",
+            "orderTrackingNo": "1011",
+            "customerName": "Fikret Uzun",
+            "district": "Bahçelievler",
+            "plate": "34,KK456",
+            "Statu": "4",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-12T19:25:00.123456"
+        },
+        {
+            "orderNo": 12,
+            "shipmentTrackingNo": "ZAB",
+            "orderTrackingNo": "1012",
+            "customerName": "Canan Aksoy",
+            "district": "Sarıyer",
+            "plate": "34LL789",
+            "Statu": "1",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-12T20:30:22.654321"
+        },
+        {
+            "orderNo": 13,
+            "shipmentTrackingNo": "CDE",
+            "orderTrackingNo": "1013",
+            "customerName": "Selin Demirtaş",
+            "district": "Zeytinburnu",
+            "plate": "34MM321",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-12T21:15:45.123456"
+        },
+        {
+            "orderNo": 14,
+            "shipmentTrackingNo": "FGH",
+            "orderTrackingNo": "1014",
+            "customerName": "Uğur Kılıç",
+            "district": "Fatih",
+            "plate": "34NN654",
+            "Statu": "3",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-12T22:25:30.987654"
+        },
+        {
+            "orderNo": 15,
+            "shipmentTrackingNo": "IJK",
+            "orderTrackingNo": "1015",
+            "customerName": "Özgür Eren",
+            "district": "Başakşehir",
+            "plate": "34OO987",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-12T23:10:05.654321"
+        },
+        {
+            "orderNo": 16,
+            "shipmentTrackingNo": "LMN",
+            "orderTrackingNo": "1016",
+            "customerName": "Esra Yücel",
+            "district": "Eyüp",
+            "plate": "34PP321",
+            "Statu": "1",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-13T00:30:15.123456"
+        },
+        {
+            "orderNo": 17,
+            "shipmentTrackingNo": "OPQ",
+            "orderTrackingNo": "1017",
+            "customerName": "Deniz Kurt",
+            "district": "Gaziosmanpaşa",
+            "plate": "34QQ456",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-13T01:45:25.987654"
+        },
+        {
+            "orderNo": 18,
+            "shipmentTrackingNo": "RST",
+            "orderTrackingNo": "1018",
+            "customerName": "Yusuf Öztürk",
+            "district": "Bayrampaşa",
+            "plate": "34RR789",
+            "Statu": "1",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-13T02:20:30.654321"
+        },
+        {
+            "orderNo": 19,
+            "shipmentTrackingNo": "UVW",
+            "orderTrackingNo": "1019",
+            "customerName": "Emre Aydın",
+            "district": "Arnavutköy",
+            "plate": "34SS123",
+            "Statu": "3",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-13T03:30:40.321654"
+        },
+        {
+            "orderNo": 20,
+            "shipmentTrackingNo": "XYZ",
+            "orderTrackingNo": "1020",
+            "customerName": "Burak Kaplan",
+            "district": "Çekmeköy",
+            "plate": "34TT456",
+            "Statu": "1",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-13T04:45:55.987654"
+        },
+        {
+            "orderNo": 21,
+            "shipmentTrackingNo": "ABC",
+            "orderTrackingNo": "1021",
+            "customerName": "Melis Şahin",
+            "district": "Silivri",
+            "plate": "34UU789",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-13T05:20:05.123456"
+        },
+        {
+            "orderNo": 22,
+            "shipmentTrackingNo": "DEF",
+            "orderTrackingNo": "1022",
+            "customerName": "Oğuzhan Tuncer",
+            "district": "Beylikdüzü",
+            "plate": "34,VV321",
+            "Statu": "4",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-13T06:30:22.654321"
+        },
+        {
+            "orderNo": 23,
+            "shipmentTrackingNo": "GHI",
+            "orderTrackingNo": "1023",
+            "customerName": "Şule Kaya",
+            "district": "Avcılar",
+            "plate": "34WW654",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-13T07:45:40.321654"
+        },
+        {
+            "orderNo": 24,
+            "shipmentTrackingNo": "JKL",
+            "orderTrackingNo": "1024",
+            "customerName": "Kerem Yıldırım",
+            "district": "Sultanbeyli",
+            "plate": "34XX987",
+            "Statu": "1",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-13T08:10:05.987654"
+        },
+        {
+            "orderNo": 25,
+            "shipmentTrackingNo": "MNO",
+            "orderTrackingNo": "1025",
+            "customerName": "Ece Önal",
+            "district": "Pendik",
+            "plate": "34YY321",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-13T09:25:15.123456"
+        },
+        {
+            "orderNo": 26,
+            "shipmentTrackingNo": "PQR",
+            "orderTrackingNo": "1026",
+            "customerName": "Mustafa Akbulut",
+            "district": "Esenler",
+            "plate": "34ZZ654",
+            "Statu": "3",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-13T10:30:30.987654"
+        },
+        {
+            "orderNo": 27,
+            "shipmentTrackingNo": "STU",
+            "orderTrackingNo": "1027",
+            "customerName": "Cem Özdemir",
+            "district": "Bağcılar",
+            "plate": "34AAA987",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-13T11:15:45.654321"
+        },
+        {
+            "orderNo": 28,
+            "shipmentTrackingNo": "VWX",
+            "orderTrackingNo": "1028",
+            "customerName": "Ceren Güner",
+            "district": "Esenyurt",
+            "plate": "34,BBB123",
+            "Statu": "2",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-13T12:30:50.321654"
+        },
+        {
+            "orderNo": 29,
+            "shipmentTrackingNo": "YZA",
+            "orderTrackingNo": "1029",
+            "customerName": "Naz Acar",
+            "district": "Küçükçekmece",
+            "plate": "34CCC456",
+            "Statu": "0",
+            "releasedForDistribution": "EVET",
+            "Date": "2024-09-13T13:45:05.987654"
+        },
+        {
+            "orderNo": 30,
+            "shipmentTrackingNo": "BCD",
+            "orderTrackingNo": "1030",
+            "customerName": "Serkan Koç",
+            "district": "Gaziosmanpaşa",
+            "plate": "34DDD789",
+            "Statu": "1",
+            "releasedForDistribution": "HAYIR",
+            "Date": "2024-09-13T14:10:22.123456"
+        }
+    ],
+    "total": 30
+}

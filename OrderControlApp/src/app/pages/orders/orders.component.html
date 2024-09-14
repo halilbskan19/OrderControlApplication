@@ -1,0 +1,65 @@
+<div class="badge-container">
+    <app-badge count="{{headerData?.packetRoute}}" title="Rotadaki Paket" color="primary" size="medium"></app-badge>
+    <app-badge count="{{headerData?.DMPackageCount}}" title="DM Paket Sayısı" color="primary" size="medium"></app-badge>
+    <app-badge count="{{headerData?.packageReleased}}" title="Dağıtıma Çıkan Paket" color="primary"
+        size="medium"></app-badge>
+    <app-badge count="{{headerData?.delivered}}" title="Teslim Edildi" color="primary" size="medium"></app-badge>
+    <app-badge count="{{headerData?.notDelivered}}" title="Teslim Edilmedi" color="primary" size="medium"></app-badge>
+    <div class="last-item">
+        <app-loading-bar [progress]="progress"></app-loading-bar>
+    </div>
+</div>
+
+
+
+<div class="table-container">
+    <h1>Siparişler</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Sipariş No</th>
+                <th>Gönderi Takip No</th>
+                <th>Sipariş Takip No</th>
+                <th>Müşteri Adı</th>
+                <th>İlçe</th>
+                <th>Plaka</th>
+                <th>Dağıtıma Çıktı mı?</th>
+                <th>Durum</th>
+                <th>Tarih</th>
+                <th>Sipariş Detay</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of pagedOrders">
+                <td>{{ order.orderNo }}</td>
+                <td>{{ order.shipmentTrackingNo }}</td>
+                <td>{{ order.orderTrackingNo }}</td>
+                <td>{{ order.customerName }}</td>
+                <td>{{ order.district }}</td>
+                <td>{{ order.plate }}</td>
+                <td>{{ order.releasedForDistribution }}</td>
+                <td>{{ order.Statu }}</td>
+                <td>{{ formatDate(order.Date) }}</td>
+                <td><button class="btn btn-secondary" (click)="navigateToOrderDetails(order.orderTrackingNo)">Sipariş
+                        Detay</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <div class="pagination__perpage">
+            <!-- Gösterim sayısı seçimi -->
+            <label for="itemsPerPage">Gösterim Sayısı:</label>
+            <select id="itemsPerPage" (change)="onItemsPerPageChange($event)">
+                <option *ngFor="let option of itemsPerPageOptions" [value]="option">{{ option }}</option>
+            </select>
+        </div>
+        <div class="pagination__pageselect">
+            <!-- Sayfa numarası seçimi -->
+            <label for="pageSelect">Sayfa:</label>
+            <select id="pageSelect" (change)="onPageChange($event)">
+                <option *ngFor="let page of totalPagesArray" [value]="page">{{ page }}</option>
+            </select>
+        </div>
+    </div>
+</div>

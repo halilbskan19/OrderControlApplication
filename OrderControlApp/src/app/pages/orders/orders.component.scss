@@ -1,0 +1,45 @@
+.badge-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+
+    .last-item {
+        grid-column: 1/6;
+    }
+}
+
+.table-container {
+    display: grid;
+    gap: 16px;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    }
+
+    .pagination {
+        display: flex;
+        gap: 20px;
+
+        &__perpage {
+            display: flex;
+            gap: 4px;
+        }
+
+        &__pageselect {
+            display: flex;
+            gap: 4px;
+
+        }
+    }
+}

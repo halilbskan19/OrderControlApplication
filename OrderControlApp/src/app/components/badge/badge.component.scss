@@ -1,0 +1,101 @@
+// Renk değişkenleri
+$primary-color: #d0d0d0;
+$success-color: #28a745;
+$warning-color: #ffc107;
+$danger-color: #dc3545;
+$white-color: #fff;
+$black-color: #000000;
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  text-align: left;
+  border-radius: 12px;
+
+  // Renk sınıfları
+  &.primary {
+    background-color: $primary-color;
+
+    .title {
+      color: $black-color;
+    }
+
+    .count {
+      color: $white-color;
+    }
+  }
+
+  &.success {
+    background-color: $success-color;
+
+    .title {
+      color: $black-color;
+    }
+
+    .count {
+      color: $white-color;
+    }
+  }
+
+  &.warning {
+    background-color: $warning-color;
+
+    .title {
+      color: $black-color;
+    }
+
+    .count {
+      color: $white-color;
+    }
+  }
+
+  &.danger {
+    background-color: $danger-color;
+
+    .title {
+      color: $black-color;
+    }
+
+    .count {
+      color: $white-color;
+    }
+  }
+
+  // Boyut sınıfları
+  &.small {
+    padding: 12px;
+
+    .title {
+      font-size: 12px;
+    }
+
+    .count {
+      font-size: 16px;
+    }
+  }
+
+  &.medium {
+    padding: 20px;
+
+    .title {
+      font-size: 14px;
+    }
+
+    .count {
+      font-size: 20px;
+    }
+  }
+
+  &.large {
+    padding: 28px;
+
+    .title {
+      font-size: 16px;
+    }
+
+    .count {
+      font-size: 24px;
+    }
+  }
+}
