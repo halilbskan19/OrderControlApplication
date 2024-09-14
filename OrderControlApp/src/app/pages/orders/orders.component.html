@@ -25,6 +25,14 @@
         <label for="plateInput">Plaka:</label>
         <input type="text" id="plateInput" [(ngModel)]="filter.plate">
     </div>
+    <div>
+        <label for="statusSelect">Durum:</label>
+        <select id="statusSelect" [(ngModel)]="filter.status">
+            <option *ngFor="let status of statusOptions" [value]="status.value">
+                {{ status.label }}
+            </option>
+        </select>
+    </div>
     <button class="btn btn-primary" (click)="applyFilters()">Uygula</button>
     <button class="btn btn-secondary" (click)="clearFilters()">Filtreyi Temizle</button>
 </div>

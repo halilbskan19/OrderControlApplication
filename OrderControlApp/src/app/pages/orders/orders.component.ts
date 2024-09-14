@@ -4,6 +4,7 @@ import { Order } from 'src/app/models/order.model';
 import { OrdersService } from 'src/app/services/orders.service';
 import { switchMap } from 'rxjs';
 import { Router } from '@angular/router';
+import { Status } from 'src/app/models/enums/status.enum';
 
 @Component({
 	selector: 'app-orders',
@@ -22,10 +23,19 @@ export class OrdersComponent implements OnInit {
 	itemsPerPageOptions: number[] = [5, 10, 20];
 	filterOrderTrackingNo: string = ''; // Filtreleme için değişken
 	filter = {
-		orderTrackingNo: '',
-		shipmentTrackingNo: '',
-		plate: ''
-	};
+        orderTrackingNo: '',
+        shipmentTrackingNo: '',
+        plate: '',
+        status: null,
+    };
+    
+    statusOptions = [
+        { value: Status.Created, label: 'Oluşturuldu' },
+        { value: Status.Cancelled, label: 'İptal Edildi' },
+        { value: Status.Delivered, label: 'Teslim Edildi' },
+        { value: Status.Pending, label: 'Bekliyor' },
+        { value: Status.Undelivered, label: 'Teslim Edilemedi' },
+    ];
 
 	constructor(private ordersService: OrdersService, private router: Router) { }
 
@@ -34,80 +44,87 @@ export class OrdersComponent implements OnInit {
 	}
 
 	loadData() {
-		this.ordersService.getHeaderCount().pipe(
-			switchMap(headerData => {
-				this.headerData = headerData;
+        this.ordersService.getHeaderCount().pipe(
+            switchMap(headerData => {
+                this.headerData = headerData;
 
-				try {
-					const completedOrder = this.headerData.completedOrder || "0/0";
-					const [totalValue, currentValue] = completedOrder.split("/").map(Number);
-					this.progress = totalValue > 0 ? (currentValue / totalValue) * 100 : 0;
-				} catch (error) {
-					console.error('Hata oluştu:', error);
-					this.progress = 0;
-				}
+                try {
+                    const completedOrder = this.headerData.completedOrder || "0/0";
+                    const [totalValue, currentValue] = completedOrder.split("/").map(Number);
+                    this.progress = totalValue > 0 ? (currentValue / totalValue) * 100 : 0;
+                } catch (error) {
+                    console.error('Hata oluştu:', error);
+                    this.progress = 0;
+                }
 
-				return this.ordersService.getOrders();
-			})
-		).subscribe({
-			next: (ordersData: Order[]) => {
-				this.ordersData = ordersData;
-				this.allOrdersData = ordersData; // Tüm verilerin yedeğini tutuyoruz
-				this.updatePagedOrders();
-				this.calculateTotalPages();
-			},
-			error: (error) => {
-				console.error('API çağrısında hata oluştu:', error);
-				this.progress = 0;
-			}
-		});
-	}
+                return this.ordersService.getOrders();
+            })
+        ).subscribe({
+            next: (ordersData: Order[]) => {
+                this.ordersData = ordersData;
+                this.allOrdersData = ordersData; // Tüm verilerin yedeğini tutuyoruz
+                this.updatePagedOrders();
+                this.calculateTotalPages();
+            },
+            error: (error) => {
+                console.error('API çağrısında hata oluştu:', error);
+                this.progress = 0;
+            }
+        });
+    }
 
 	applyFilters() {
-		let filteredOrders = this.ordersData;
-	
+        let filteredOrders = this.allOrdersData;
+    
 		// Sipariş takip numarasına göre filtrele
-		if (this.filter.orderTrackingNo) {
-			filteredOrders = filteredOrders.filter(order =>
-				order.orderTrackingNo.includes(this.filter.orderTrackingNo)
-			);
-		}
-	
+        if (this.filter.orderTrackingNo) {
+            filteredOrders = filteredOrders.filter(order =>
+                order.orderTrackingNo.includes(this.filter.orderTrackingNo)
+            );
+        }
+    
 		// Gönderi takip numarasına göre filtrele
-		if (this.filter.shipmentTrackingNo) {
-			filteredOrders = filteredOrders.filter(order =>
-				order.shipmentTrackingNo.includes(this.filter.shipmentTrackingNo)
-			);
-		}
-	
+        if (this.filter.shipmentTrackingNo) {
+            filteredOrders = filteredOrders.filter(order =>
+                order.shipmentTrackingNo.includes(this.filter.shipmentTrackingNo)
+            );
+        }
+    
 		// Plakaya göre filtrele
-		if (this.filter.plate) {
-			filteredOrders = filteredOrders.filter(order =>
-				order.plate.includes(this.filter.plate)
-			);
-		}
-	
+        if (this.filter.plate) {
+            filteredOrders = filteredOrders.filter(order =>
+                order.plate.includes(this.filter.plate)
+            );
+        }
+    
+        if (this.filter.status !== null) {
+            filteredOrders = filteredOrders.filter(order =>
+                order.Statu === this.filter.status
+            );
+        }
+    
 		// Filtrelenen verileri güncelle ve sayfalama işlemini uygula
-		this.ordersData = filteredOrders;
+        this.ordersData = filteredOrders;
 		this.currentPage = 1; // Sayfa numarasını sıfırla
-		this.updatePagedOrders();
-		this.calculateTotalPages();
-	}
+        this.updatePagedOrders();
+        this.calculateTotalPages();
+    }
 
 	clearFilters() {
 		// Filtre alanlarını temizle
-		this.filter = {
-			orderTrackingNo: '',
-			shipmentTrackingNo: '',
-			plate: ''
-		};
-	
+        this.filter = {
+            orderTrackingNo: '',
+            shipmentTrackingNo: '',
+            plate: '',
+            status: null,
+        };
+    
 		// Orijinal sipariş verilerini tekrar yükle
 		this.ordersData = this.allOrdersData; // Tüm sipariş verileri orijinal listeyi tutuyor
 		this.currentPage = 1; // Sayfa numarasını sıfırla
-		this.updatePagedOrders();
-		this.calculateTotalPages();
-	}
+        this.updatePagedOrders();
+        this.calculateTotalPages();
+    }
 
 	getOrderDetail(orderTrackingNo: string) {
 		this.ordersService.getOrdersByOrderTrackingNo(orderTrackingNo).subscribe((data: Order[]) => {
