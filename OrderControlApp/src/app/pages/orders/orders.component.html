@@ -10,7 +10,24 @@
     </div>
 </div>
 
-
+<!-- Filtreleme Bölümü -->
+<div class="filter-container">
+    <h3>Filtreleme</h3>
+    <div>
+        <label for="orderTrackingNoInput">Sipariş Takip No:</label>
+        <input type="text" id="orderTrackingNoInput" [(ngModel)]="filter.orderTrackingNo">
+    </div>
+    <div>
+        <label for="shipmentTrackingNoInput">Gönderi Takip No:</label>
+        <input type="text" id="shipmentTrackingNoInput" [(ngModel)]="filter.shipmentTrackingNo">
+    </div>
+    <div>
+        <label for="plateInput">Plaka:</label>
+        <input type="text" id="plateInput" [(ngModel)]="filter.plate">
+    </div>
+    <button class="btn btn-primary" (click)="applyFilters()">Uygula</button>
+    <button class="btn btn-secondary" (click)="clearFilters()">Filtreyi Temizle</button>
+</div>
 
 <div class="table-container">
     <h1>Siparişler</h1>

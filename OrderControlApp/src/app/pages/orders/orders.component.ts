@@ -14,11 +14,18 @@ export class OrdersComponent implements OnInit {
 	headerData: HeaderCount | undefined;
 	ordersData: Order[] = [];
 	pagedOrders: Order[] = [];
+	allOrdersData: Order[] = [];
 	progress: number = 30;
 	itemsPerPage: number = 5; // Varsayılan gösterim sayısı
 	currentPage: number = 1; // Varsayılan sayfa numarası
 	totalPagesArray: number[] = [];
 	itemsPerPageOptions: number[] = [5, 10, 20];
+	filterOrderTrackingNo: string = ''; // Filtreleme için değişken
+	filter = {
+		orderTrackingNo: '',
+		shipmentTrackingNo: '',
+		plate: ''
+	};
 
 	constructor(private ordersService: OrdersService, private router: Router) { }
 
@@ -43,8 +50,9 @@ export class OrdersComponent implements OnInit {
 				return this.ordersService.getOrders();
 			})
 		).subscribe({
-			next: (ordersData: Order[]) => { // Düzeltilmiş tip
+			next: (ordersData: Order[]) => {
 				this.ordersData = ordersData;
+				this.allOrdersData = ordersData; // Tüm verilerin yedeğini tutuyoruz
 				this.updatePagedOrders();
 				this.calculateTotalPages();
 			},
@@ -55,12 +63,57 @@ export class OrdersComponent implements OnInit {
 		});
 	}
 
+	applyFilters() {
+		let filteredOrders = this.ordersData;
+	
+		// Sipariş takip numarasına göre filtrele
+		if (this.filter.orderTrackingNo) {
+			filteredOrders = filteredOrders.filter(order =>
+				order.orderTrackingNo.includes(this.filter.orderTrackingNo)
+			);
+		}
+	
+		// Gönderi takip numarasına göre filtrele
+		if (this.filter.shipmentTrackingNo) {
+			filteredOrders = filteredOrders.filter(order =>
+				order.shipmentTrackingNo.includes(this.filter.shipmentTrackingNo)
+			);
+		}
+	
+		// Plakaya göre filtrele
+		if (this.filter.plate) {
+			filteredOrders = filteredOrders.filter(order =>
+				order.plate.includes(this.filter.plate)
+			);
+		}
+	
+		// Filtrelenen verileri güncelle ve sayfalama işlemini uygula
+		this.ordersData = filteredOrders;
+		this.currentPage = 1; // Sayfa numarasını sıfırla
+		this.updatePagedOrders();
+		this.calculateTotalPages();
+	}
+
+	clearFilters() {
+		// Filtre alanlarını temizle
+		this.filter = {
+			orderTrackingNo: '',
+			shipmentTrackingNo: '',
+			plate: ''
+		};
+	
+		// Orijinal sipariş verilerini tekrar yükle
+		this.ordersData = this.allOrdersData; // Tüm sipariş verileri orijinal listeyi tutuyor
+		this.currentPage = 1; // Sayfa numarasını sıfırla
+		this.updatePagedOrders();
+		this.calculateTotalPages();
+	}
+
 	getOrderDetail(orderTrackingNo: string) {
 		this.ordersService.getOrdersByOrderTrackingNo(orderTrackingNo).subscribe((data: Order[]) => {
 			this.ordersData = data;
 		});
 	}
-
 
 	navigateToOrderDetails(orderTrackingNo: string) {
 		this.router.navigate(['/detail', orderTrackingNo]);
