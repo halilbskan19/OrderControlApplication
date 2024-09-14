@@ -103,7 +103,7 @@ export class OrdersComponent implements OnInit {
 		// Gönderi takip numarasına göre filtrele
         if (this.filter.shipmentTrackingNo) {
             filteredOrders = filteredOrders.filter(order =>
-                order.shipmentTrackingNo.includes(this.filter.shipmentTrackingNo)
+                order.shipmentTrackingNo.includes(this.filter.shipmentTrackingNo.toUpperCase())
             );
         }
     

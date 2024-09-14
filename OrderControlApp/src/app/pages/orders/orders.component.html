@@ -1,109 +1,118 @@
-<div class="badge-container">
-    <app-badge count="{{headerData?.packetRoute}}" title="Rotadaki Paket" color="primary" size="medium"></app-badge>
-    <app-badge count="{{headerData?.DMPackageCount}}" title="DM Paket Sayısı" color="primary" size="medium"></app-badge>
-    <app-badge count="{{headerData?.packageReleased}}" title="Dağıtıma Çıkan Paket" color="primary"
-        size="medium"></app-badge>
-    <app-badge count="{{headerData?.delivered}}" title="Teslim Edildi" color="primary" size="medium"></app-badge>
-    <app-badge count="{{headerData?.notDelivered}}" title="Teslim Edilmedi" color="primary" size="medium"></app-badge>
-    <div class="last-item">
-        <app-loading-bar [progress]="progress"></app-loading-bar>
-    </div>
-</div>
-
-<!-- Filtreleme Bölümü -->
-<div class="filter-container">
-    <h3>Filtreleme</h3>
-    <div>
-        <label for="orderTrackingNoInput">Sipariş Takip No:</label>
-        <input type="text" id="orderTrackingNoInput" [(ngModel)]="filter.orderTrackingNo">
-    </div>
-    <div>
-        <label for="shipmentTrackingNoInput">Gönderi Takip No:</label>
-        <input type="text" id="shipmentTrackingNoInput" [(ngModel)]="filter.shipmentTrackingNo">
-    </div>
-    <div>
-        <label for="plateInput">Plaka:</label>
-        <input type="text" id="plateInput" [(ngModel)]="filter.plate">
-    </div>
-    <div>
-        <label for="statusSelect">Durum:</label>
-        <select id="statusSelect" [(ngModel)]="filter.status">
-            <option *ngFor="let status of statusOptions" [value]="status.value">
-                {{ status.label }}
-            </option>
-        </select>
-    </div>
-    <div>
-        <label for="distributionStatusSelect">Dağıtıma Çıktı mı?:</label>
-        <select id="distributionStatusSelect" [(ngModel)]="filter.distributionStatus">
-            <option *ngFor="let distributionStatus of distributionStatusOptions" [value]="distributionStatus.value">
-                {{ distributionStatus.label }}
-            </option>
-        </select>
-    </div>
-    <div>
-        <mat-form-field>
-            <mat-label>Tarih Aralığı</mat-label>
-            <mat-date-range-input [formGroup]="dateRangeFormGroup" [rangePicker]="picker">
-                <input matStartDate formControlName="start">
-                <input matEndDate formControlName="end">
-            </mat-date-range-input>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
-    </div>
-    <button class="btn btn-primary" (click)="applyFilters()">Uygula</button>
-    <button class="btn btn-secondary" (click)="clearFilters()">Filtreyi Temizle</button>
-</div>
-
-<div class="table-container">
-    <h1>Siparişler</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Sipariş No</th>
-                <th>Gönderi Takip No</th>
-                <th>Sipariş Takip No</th>
-                <th>Müşteri Adı</th>
-                <th>İlçe</th>
-                <th>Plaka</th>
-                <th>Dağıtıma Çıktı mı?</th>
-                <th>Durum</th>
-                <th>Tarih</th>
-                <th>Sipariş Detay</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let order of pagedOrders">
-                <td>{{ order.orderNo }}</td>
-                <td>{{ order.shipmentTrackingNo }}</td>
-                <td>{{ order.orderTrackingNo }}</td>
-                <td>{{ order.customerName }}</td>
-                <td>{{ order.district }}</td>
-                <td>{{ order.plate }}</td>
-                <td>{{ order.releasedForDistribution }}</td>
-                <td>{{ order.Statu }}</td>
-                <td>{{ formatDate(order.Date) }}</td>
-                <td><button class="btn btn-secondary" (click)="navigateToOrderDetails(order.orderTrackingNo)">Sipariş
-                        Detay</button></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="pagination">
-        <div class="pagination__perpage">
-            <!-- Gösterim sayısı seçimi -->
-            <label for="itemsPerPage">Gösterim Sayısı:</label>
-            <select id="itemsPerPage" (change)="onItemsPerPageChange($event)">
-                <option *ngFor="let option of itemsPerPageOptions" [value]="option">{{ option }}</option>
-            </select>
+<div class="order-control-page">
+    <div class="badge-container">
+        <app-badge count="{{headerData?.packetRoute}}" title="Rotadaki Paket" color="primary" size="medium"></app-badge>
+        <app-badge count="{{headerData?.DMPackageCount}}" title="DM Paket Sayısı" color="primary"
+            size="medium"></app-badge>
+        <app-badge count="{{headerData?.packageReleased}}" title="Dağıtıma Çıkan Paket" color="primary"
+            size="medium"></app-badge>
+        <app-badge count="{{headerData?.delivered}}" title="Teslim Edildi" color="primary" size="medium"></app-badge>
+        <app-badge count="{{headerData?.notDelivered}}" title="Teslim Edilmedi" color="primary"
+            size="medium"></app-badge>
+        <div class="last-item">
+            <app-loading-bar [progress]="progress"></app-loading-bar>
         </div>
-        <div class="pagination__pageselect">
-            <!-- Sayfa numarası seçimi -->
-            <label for="pageSelect">Sayfa:</label>
-            <select id="pageSelect" (change)="onPageChange($event)">
-                <option *ngFor="let page of totalPagesArray" [value]="page">{{ page }}</option>
-            </select>
+    </div>
+
+    <!-- Filtreleme Bölümü -->
+    <div class="filter">
+        <h3>Filtreleme</h3>
+        <div class="filter-container">
+            <mat-form-field class="example-full-width">
+                <mat-label>Sipariş Takip No</mat-label>
+                <input matInput [(ngModel)]="filter.orderTrackingNo">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <mat-label>Gönderi Takip No</mat-label>
+                <input matInput [(ngModel)]="filter.shipmentTrackingNo">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <mat-label>Plaka</mat-label>
+                <input matInput [(ngModel)]="filter.plate">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <mat-label>Durum</mat-label>
+                <mat-select [(ngModel)]="filter.status">
+                    <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+                        {{ status.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <mat-label>Dağıtıma Çıktı mı?</mat-label>
+                <mat-select [(ngModel)]="filter.distributionStatus">
+                    <mat-option *ngFor="let distributionStatus of distributionStatusOptions"
+                        [value]="distributionStatus.value">
+                        {{ distributionStatus.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Tarih Aralığı</mat-label>
+                <mat-date-range-input [formGroup]="dateRangeFormGroup" [rangePicker]="picker">
+                    <input matStartDate formControlName="start">
+                    <input matEndDate formControlName="end">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            <div class="filter-container__cta">
+                <button class="btn btn-primary" (click)="applyFilters()">Uygula</button>
+                <button class="btn btn-secondary" (click)="clearFilters()">Filtreyi Temizle</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="data-table">
+        <h1>Siparişler</h1>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sipariş No</th>
+                        <th>Gönderi Takip No</th>
+                        <th>Sipariş Takip No</th>
+                        <th>Müşteri Adı</th>
+                        <th>İlçe</th>
+                        <th>Plaka</th>
+                        <th>Dağıtıma Çıktı mı?</th>
+                        <th>Durum</th>
+                        <th>Tarih</th>
+                        <th>Sipariş Detay</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of pagedOrders">
+                        <td>{{ order.orderNo }}</td>
+                        <td>{{ order.shipmentTrackingNo }}</td>
+                        <td>{{ order.orderTrackingNo }}</td>
+                        <td>{{ order.customerName }}</td>
+                        <td>{{ order.district }}</td>
+                        <td>{{ order.plate }}</td>
+                        <td>{{ order.releasedForDistribution }}</td>
+                        <td>{{ order.Statu }}</td>
+                        <td>{{ formatDate(order.Date) }}</td>
+                        <td><button class="btn btn-secondary"
+                                (click)="navigateToOrderDetails(order.orderTrackingNo)">Sipariş
+                                Detay</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <div class="pagination__perpage">
+                <!-- Gösterim sayısı seçimi -->
+                <label for="itemsPerPage">Gösterim Sayısı:</label>
+                <select id="itemsPerPage" (change)="onItemsPerPageChange($event)">
+                    <option *ngFor="let option of itemsPerPageOptions" [value]="option">{{ option }}</option>
+                </select>
+            </div>
+            <div class="pagination__pageselect">
+                <!-- Sayfa numarası seçimi -->
+                <label for="pageSelect">Sayfa:</label>
+                <select id="pageSelect" (change)="onPageChange($event)">
+                    <option *ngFor="let page of totalPagesArray" [value]="page">{{ page }}</option>
+                </select>
+            </div>
         </div>
     </div>
 </div>
