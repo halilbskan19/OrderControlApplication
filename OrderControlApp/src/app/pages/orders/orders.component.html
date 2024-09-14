@@ -33,6 +33,14 @@
             </option>
         </select>
     </div>
+    <div>
+        <label for="distributionStatusSelect">Dağıtıma Çıktı mı?:</label>
+        <select id="distributionStatusSelect" [(ngModel)]="filter.distributionStatus">
+            <option *ngFor="let distributionStatus of distributionStatusOptions" [value]="distributionStatus.value">
+                {{ distributionStatus.label }}
+            </option>
+        </select>
+    </div>
     <button class="btn btn-primary" (click)="applyFilters()">Uygula</button>
     <button class="btn btn-secondary" (click)="clearFilters()">Filtreyi Temizle</button>
 </div>

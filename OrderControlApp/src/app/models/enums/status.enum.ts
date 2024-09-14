@@ -7,6 +7,6 @@ export enum Status {
 }
 
 export enum DistributionStatus {
-    No = 0,
-    Yes = 1
+    Yes = "EVET",
+    No = "HAYIR"
 }

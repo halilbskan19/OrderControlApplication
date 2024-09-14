@@ -4,7 +4,7 @@ import { Order } from 'src/app/models/order.model';
 import { OrdersService } from 'src/app/services/orders.service';
 import { switchMap } from 'rxjs';
 import { Router } from '@angular/router';
-import { Status } from 'src/app/models/enums/status.enum';
+import { DistributionStatus, Status } from 'src/app/models/enums/status.enum';
 
 @Component({
 	selector: 'app-orders',
@@ -27,6 +27,7 @@ export class OrdersComponent implements OnInit {
         shipmentTrackingNo: '',
         plate: '',
         status: null,
+		distributionStatus: null
     };
     
     statusOptions = [
@@ -35,6 +36,11 @@ export class OrdersComponent implements OnInit {
         { value: Status.Delivered, label: 'Teslim Edildi' },
         { value: Status.Pending, label: 'Bekliyor' },
         { value: Status.Undelivered, label: 'Teslim Edilemedi' },
+    ];
+
+	distributionStatusOptions = [
+        { value: DistributionStatus.Yes, label: 'Evet' },
+        { value: DistributionStatus.No, label: 'Hayır' },
     ];
 
 	constructor(private ordersService: OrdersService, private router: Router) { }
@@ -102,6 +108,12 @@ export class OrdersComponent implements OnInit {
                 order.Statu === this.filter.status
             );
         }
+
+		if (this.filter.distributionStatus !== null) {
+            filteredOrders = filteredOrders.filter(order =>
+                order.releasedForDistribution === this.filter.distributionStatus
+            );
+        }
     
 		// Filtrelenen verileri güncelle ve sayfalama işlemini uygula
         this.ordersData = filteredOrders;
@@ -112,11 +124,12 @@ export class OrdersComponent implements OnInit {
 
 	clearFilters() {
 		// Filtre alanlarını temizle
-        this.filter = {
+		this.filter = {
             orderTrackingNo: '',
             shipmentTrackingNo: '',
             plate: '',
             status: null,
+            distributionStatus: null
         };
     
 		// Orijinal sipariş verilerini tekrar yükle
