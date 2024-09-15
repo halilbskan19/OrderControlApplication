@@ -1,208 +1,227 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
+import { Router } from '@angular/router';
+import { switchMap } from 'rxjs';
 import { HeaderCount } from 'src/app/models/header-count.model';
 import { Order } from 'src/app/models/order.model';
 import { OrdersService } from 'src/app/services/orders.service';
-import { switchMap } from 'rxjs';
-import { Router } from '@angular/router';
 import { DistributionStatus, Status } from 'src/app/models/enums/status.enum';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { DateAdapter } from '@angular/material/core';
 
 @Component({
-	selector: 'app-orders',
-	templateUrl: './orders.component.html',
-	styleUrls: ['./orders.component.scss'],
+  selector: 'app-orders',
+  templateUrl: './orders.component.html',
+  styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {
-	headerData: HeaderCount | undefined;
-	ordersData: Order[] = [];
-	pagedOrders: Order[] = [];
-	allOrdersData: Order[] = [];
-	progress: number = 30;
-	itemsPerPage: number = 5; // Varsayılan gösterim sayısı
-	currentPage: number = 1; // Varsayılan sayfa numarası
-	totalPagesArray: number[] = [];
-	itemsPerPageOptions: number[] = [5, 10, 20];
-	filterOrderTrackingNo: string = ''; // Filtreleme için değişken
-	filter = {
-		orderTrackingNo: '',
-		shipmentTrackingNo: '',
-		plate: '',
-		startDate: null,
-		endDate: null,
-		status: null,
-		distributionStatus: null
-	};
-	dateRangeFormGroup: FormGroup;
-    
-    statusOptions = [
-        { value: Status.Created, label: 'Oluşturuldu' },
-        { value: Status.Cancelled, label: 'İptal Edildi' },
-        { value: Status.Delivered, label: 'Teslim Edildi' },
-        { value: Status.Pending, label: 'Bekliyor' },
-        { value: Status.Undelivered, label: 'Teslim Edilemedi' },
-    ];
+  // Header bilgilerini tutan değişken
+  headerData: HeaderCount | undefined;
 
-	distributionStatusOptions = [
-        { value: DistributionStatus.Yes, label: 'Evet' },
-        { value: DistributionStatus.No, label: 'Hayır' },
-    ];
+  // Sipariş verilerini tutan değişkenler
+  ordersData: Order[] = [];
+  pagedOrders: Order[] = [];
+  allOrdersData: Order[] = [];
+  
+  // Yükleme ilerlemesini göstermek için değişken
+  progress: number = 30;
 
-	constructor(private ordersService: OrdersService, private router: Router, private fb: FormBuilder, private dateAdapter: DateAdapter<Date>) { 
-        this.dateRangeFormGroup = this.fb.group({
-			start: [null],
-			end: [null]
-		});
-        this.dateAdapter.setLocale('tr'); // Türkçe tarih formatı
+  // Sayfalama ile ilgili değişkenler
+  itemsPerPage: number = 5; // Varsayılan gösterim sayısı
+  currentPage: number = 1; // Varsayılan sayfa numarası
+  totalPagesArray: number[] = [];
+  itemsPerPageOptions: number[] = [5, 10, 20]; // Sayfa başına öğe seçenekleri
+
+  // Filtreleme ile ilgili değişkenler
+  filter: {
+    orderTrackingNo: string;
+    shipmentTrackingNo: string;
+    plate: string;
+    startDate: Date | null;
+    endDate: Date | null;
+    status: Status | null;
+    distributionStatus: DistributionStatus | null;
+  } = {
+    orderTrackingNo: '',
+    shipmentTrackingNo: '',
+    plate: '',
+    startDate: null,
+    endDate: null,
+    status: null,
+    distributionStatus: null
+  };
+
+  // Tarih aralığı formu
+  dateRangeFormGroup: FormGroup;
+
+  // Durum seçenekleri (enum'lara dayalı)
+  statusOptions = [
+    { value: Status.Created, label: 'Oluşturuldu' },
+    { value: Status.Cancelled, label: 'İptal Edildi' },
+    { value: Status.Delivered, label: 'Teslim Edildi' },
+    { value: Status.Pending, label: 'Bekliyor' },
+    { value: Status.Undelivered, label: 'Teslim Edilemedi' }
+  ];
+
+  // Dağıtım durumu seçenekleri (enum'lara dayalı)
+  distributionStatusOptions = [
+    { value: DistributionStatus.Yes, label: 'Evet' },
+    { value: DistributionStatus.No, label: 'Hayır' }
+  ];
+
+  constructor(
+    private ordersService: OrdersService,
+    private router: Router,
+    private fb: FormBuilder,
+    private dateAdapter: DateAdapter<Date>
+  ) {
+    // Formu oluşturur ve tarih formatını Türkçe yapar
+    this.dateRangeFormGroup = this.fb.group({
+      start: [null],
+      end: [null]
+    });
+    this.dateAdapter.setLocale('tr'); // Türkçe tarih formatı
+  }
+
+  ngOnInit(): void {
+    this.loadData(); // Verileri yükler
+  }
+
+  private loadData(): void {
+    // Header bilgilerini ve sipariş verilerini yükler
+    this.ordersService.getHeaderCount().pipe(
+      switchMap(headerData => {
+        this.headerData = headerData;
+        this.updateProgress(); // Yükleme ilerlemesini günceller
+        return this.ordersService.getOrders();
+      })
+    ).subscribe({
+      next: ordersData => {
+        this.ordersData = ordersData;
+        this.allOrdersData = [...ordersData]; // Tüm verilerin yedeğini tutar
+        this.updatePagedOrders(); // Sayfalandırılmış verileri günceller
+        this.calculateTotalPages(); // Toplam sayfa sayısını hesaplar
+      },
+      error: err => {
+        console.error('API çağrısında hata oluştu:', err);
+        this.progress = 0; // Hata durumunda ilerlemeyi sıfırlar
+      }
+    });
+  }
+
+  private updateProgress(): void {
+    if (this.headerData) {
+      try {
+        const completedOrder = this.headerData.completedOrder || '0/0';
+        const [totalValue, currentValue] = completedOrder.split('/').map(Number);
+        this.progress = totalValue > 0 ? (currentValue / totalValue) * 100 : 0;
+      } catch (error) {
+        console.error('Hata oluştu:', error);
+        this.progress = 0; // Hata durumunda ilerlemeyi sıfırlar
+      }
     }
+  }
 
-	ngOnInit() {
-		this.loadData();
-	}
+  applyFilters(): void {
+    // Verileri filtreler ve sayfalandırır
+    let filteredOrders = this.allOrdersData;
 
-	loadData() {
-        this.ordersService.getHeaderCount().pipe(
-            switchMap(headerData => {
-                this.headerData = headerData;
+    filteredOrders = this.filterByProperty(filteredOrders, 'orderTrackingNo', this.filter.orderTrackingNo);
+    filteredOrders = this.filterByProperty(filteredOrders, 'shipmentTrackingNo', this.filter.shipmentTrackingNo.toUpperCase());
+    filteredOrders = this.filterByProperty(filteredOrders, 'plate', this.filter.plate);
+    filteredOrders = this.filterByStatus(filteredOrders, this.filter.status);
+    filteredOrders = this.filterByDistributionStatus(filteredOrders, this.filter.distributionStatus);
+    filteredOrders = this.filterByDateRange(filteredOrders, this.dateRangeFormGroup.value.start, this.dateRangeFormGroup.value.end);
 
-                try {
-                    const completedOrder = this.headerData.completedOrder || "0/0";
-                    const [totalValue, currentValue] = completedOrder.split("/").map(Number);
-                    this.progress = totalValue > 0 ? (currentValue / totalValue) * 100 : 0;
-                } catch (error) {
-                    console.error('Hata oluştu:', error);
-                    this.progress = 0;
-                }
+    this.ordersData = filteredOrders;
+    this.currentPage = 1; // Sayfa numarasını sıfırlar
+    this.updatePagedOrders(); // Sayfalandırılmış verileri günceller
+    this.calculateTotalPages(); // Toplam sayfa sayısını hesaplar
+  }
 
-                return this.ordersService.getOrders();
-            })
-        ).subscribe({
-            next: (ordersData: Order[]) => {
-                this.ordersData = ordersData;
-                this.allOrdersData = ordersData; // Tüm verilerin yedeğini tutuyoruz
-                this.updatePagedOrders();
-                this.calculateTotalPages();
-            },
-            error: (error) => {
-                console.error('API çağrısında hata oluştu:', error);
-                this.progress = 0;
-            }
-        });
+  private filterByProperty(orders: Order[], property: string, value: string): Order[] {
+    // Belirli bir özelliğe göre filtreleme yapar
+    return value ? orders.filter(order => (order as any)[property]?.includes(value)) : orders;
+  }
+
+  private filterByStatus(orders: Order[], status: Status | null): Order[] {
+    // Duruma göre filtreleme yapar
+    return status ? orders.filter(order => order.Statu === status) : orders;
+  }
+
+  private filterByDistributionStatus(orders: Order[], distributionStatus: DistributionStatus | null): Order[] {
+    // Dağıtım durumuna göre filtreleme yapar
+    return distributionStatus ? orders.filter(order => order.releasedForDistribution === distributionStatus) : orders;
+  }
+
+  private filterByDateRange(orders: Order[], startDate: Date | null, endDate: Date | null): Order[] {
+    // Tarih aralığına göre filtreleme yapar
+    if (startDate && endDate) {
+      return orders.filter(order => {
+        const orderDate = new Date(order.Date);
+        return orderDate >= startDate && orderDate <= endDate;
+      });
     }
+    return orders;
+  }
 
-	applyFilters() {
-        let filteredOrders = this.allOrdersData;
-    
-		// Sipariş takip numarasına göre filtrele
-        if (this.filter.orderTrackingNo) {
-            filteredOrders = filteredOrders.filter(order =>
-                order.orderTrackingNo.includes(this.filter.orderTrackingNo)
-            );
-        }
-    
-		// Gönderi takip numarasına göre filtrele
-        if (this.filter.shipmentTrackingNo) {
-            filteredOrders = filteredOrders.filter(order =>
-                order.shipmentTrackingNo.includes(this.filter.shipmentTrackingNo.toUpperCase())
-            );
-        }
-    
-		// Plakaya göre filtrele
-        if (this.filter.plate) {
-            filteredOrders = filteredOrders.filter(order =>
-                order.plate.includes(this.filter.plate)
-            );
-        }
-    
-        if (this.filter.status !== null) {
-            filteredOrders = filteredOrders.filter(order =>
-                order.Statu === this.filter.status
-            );
-        }
+  clearFilters(): void {
+    // Filtreleri temizler ve verileri yeniden yükler
+    this.filter = {
+      orderTrackingNo: '',
+      shipmentTrackingNo: '',
+      plate: '',
+      startDate: null,
+      endDate: null,
+      status: null,
+      distributionStatus: null
+    };
+    this.dateRangeFormGroup.reset();
+    this.ordersData = [...this.allOrdersData]; // Tüm sipariş verilerini orijinal listeyi tekrar yükler
+    this.currentPage = 1; // Sayfa numarasını sıfırlar
+    this.updatePagedOrders(); // Sayfalandırılmış verileri günceller
+    this.calculateTotalPages(); // Toplam sayfa sayısını hesaplar
+  }
 
-		if (this.filter.distributionStatus !== null) {
-            filteredOrders = filteredOrders.filter(order =>
-                order.releasedForDistribution === this.filter.distributionStatus
-            );
-        }
+  navigateToOrderDetails(orderTrackingNo: string): void {
+    // Sipariş detaylarına yönlendirir
+    this.router.navigate(['/detail', orderTrackingNo]);
+  }
 
-        if (this.dateRangeFormGroup.value.start && this.dateRangeFormGroup.value.end) {
-			const startDate = new Date(this.dateRangeFormGroup.value.start);
-			const endDate = new Date(this.dateRangeFormGroup.value.end);
-			filteredOrders = filteredOrders.filter(order => {
-				const orderDate = new Date(order.Date);
-				return orderDate >= startDate && orderDate <= endDate;
-			});
-		}
-    
-		// Filtrelenen verileri güncelle ve sayfalama işlemini uygula
-        this.ordersData = filteredOrders;
-		this.currentPage = 1; // Sayfa numarasını sıfırla
-        this.updatePagedOrders();
-        this.calculateTotalPages();
-    }
+  formatDate(dateString: string): string {
+    // Tarih formatını günceller
+    const date = new Date(dateString);
+    const day = ('0' + date.getDate()).slice(-2);
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
 
-	clearFilters() {
-		// Filtre alanlarını temizle
-		this.filter = {
-			orderTrackingNo: '',
-			shipmentTrackingNo: '',
-			plate: '',
-			startDate: null,
-			endDate: null,
-			status: null,
-			distributionStatus: null
-		};
+  onItemsPerPageChange(event: Event): void {
+    // Sayfa başına gösterim sayısını değiştirir
+    const select = event.target as HTMLSelectElement;
+    this.itemsPerPage = +select.value;
+    this.currentPage = 1; // Sayfa numarasını sıfırlar
+    this.updatePagedOrders(); // Sayfalandırılmış verileri günceller
+    this.calculateTotalPages(); // Toplam sayfa sayısını hesaplar
+  }
 
-        this.dateRangeFormGroup.reset();
-    
-		// Orijinal sipariş verilerini tekrar yükle
-		this.ordersData = this.allOrdersData; // Tüm sipariş verileri orijinal listeyi tutuyor
-		this.currentPage = 1; // Sayfa numarasını sıfırla
-        this.updatePagedOrders();
-        this.calculateTotalPages();
-    }
+  onPageChange(event: Event): void {
+    // Sayfa numarasını değiştirir
+    const select = event.target as HTMLSelectElement;
+    this.currentPage = +select.value;
+    this.updatePagedOrders(); // Sayfalandırılmış verileri günceller
+  }
 
-	getOrderDetail(orderTrackingNo: string) {
-		this.ordersService.getOrdersByOrderTrackingNo(orderTrackingNo).subscribe((data: Order[]) => {
-			this.ordersData = data;
-		});
-	}
+  private updatePagedOrders(): void {
+    // Sayfalandırılmış sipariş verilerini günceller
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.pagedOrders = this.ordersData.slice(startIndex, endIndex);
+  }
 
-	navigateToOrderDetails(orderTrackingNo: string) {
-		this.router.navigate(['/detail', orderTrackingNo]);
-	}
-
-	formatDate(dateString: string): string {
-		const date = new Date(dateString);
-		const day = ('0' + date.getDate()).slice(-2);
-		const month = ('0' + (date.getMonth() + 1)).slice(-2);
-		const year = date.getFullYear();
-		return `${day}/${month}/${year}`;
-	}
-
-	onItemsPerPageChange(event: Event) {
-		const select = event.target as HTMLSelectElement;
-		this.itemsPerPage = +select.value;
-		this.currentPage = 1; // Sayfa numarasını sıfırla
-		this.updatePagedOrders();
-		this.calculateTotalPages();
-	}
-
-	onPageChange(event: Event) {
-		const select = event.target as HTMLSelectElement;
-		this.currentPage = +select.value;
-		this.updatePagedOrders();
-	}
-
-	updatePagedOrders() {
-		const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-		const endIndex = startIndex + this.itemsPerPage;
-		this.pagedOrders = this.ordersData.slice(startIndex, endIndex);
-	}
-
-	calculateTotalPages() {
-		const totalPages = Math.ceil(this.ordersData.length / this.itemsPerPage);
-		this.totalPagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
-	}
+  private calculateTotalPages(): void {
+    // Toplam sayfa sayısını hesaplar
+    const totalPages = Math.ceil(this.ordersData.length / this.itemsPerPage);
+    this.totalPagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
 }

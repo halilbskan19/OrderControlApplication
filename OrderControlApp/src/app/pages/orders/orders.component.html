@@ -18,24 +18,16 @@
         <h3>Filtreleme</h3>
         <div class="filter-container">
             <mat-form-field class="example-full-width">
-                <mat-label>Sipariş Takip No</mat-label>
-                <input matInput [(ngModel)]="filter.orderTrackingNo">
-            </mat-form-field>
-            <mat-form-field class="example-full-width">
                 <mat-label>Gönderi Takip No</mat-label>
                 <input matInput [(ngModel)]="filter.shipmentTrackingNo">
             </mat-form-field>
             <mat-form-field class="example-full-width">
-                <mat-label>Plaka</mat-label>
-                <input matInput [(ngModel)]="filter.plate">
+                <mat-label>Sipariş Takip No</mat-label>
+                <input matInput [(ngModel)]="filter.orderTrackingNo">
             </mat-form-field>
             <mat-form-field class="example-full-width">
-                <mat-label>Durum</mat-label>
-                <mat-select [(ngModel)]="filter.status">
-                    <mat-option *ngFor="let status of statusOptions" [value]="status.value">
-                        {{ status.label }}
-                    </mat-option>
-                </mat-select>
+                <mat-label>Plaka</mat-label>
+                <input matInput [(ngModel)]="filter.plate">
             </mat-form-field>
             <mat-form-field class="example-full-width">
                 <mat-label>Dağıtıma Çıktı mı?</mat-label>
@@ -43,6 +35,14 @@
                     <mat-option *ngFor="let distributionStatus of distributionStatusOptions"
                         [value]="distributionStatus.value">
                         {{ distributionStatus.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <mat-label>Durum</mat-label>
+                <mat-select [(ngModel)]="filter.status">
+                    <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+                        {{ status.label }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

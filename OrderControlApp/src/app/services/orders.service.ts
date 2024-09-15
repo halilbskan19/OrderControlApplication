@@ -9,7 +9,7 @@ import { Order } from '../models/order.model';
 })
 export class OrdersService {
   private headerCountApiUrl = 'http://localhost:3000/header'; // JSON Server Header API URL
-  private dataTableApiUrl = 'http://localhost:3000/dataTable'; // JSON Server DataT Table API URL
+  private dataTableApiUrl = 'http://localhost:3000/dataTable'; // JSON Server Data Table API URL
 
   constructor(private http: HttpClient) { }
 
@@ -25,10 +25,5 @@ export class OrdersService {
   // Filtreleme yapmak için
   getOrdersByOrderTrackingNo(orderTrackingNo: string): Observable<Order[]> {
     return this.http.get<Order[]>(`${this.dataTableApiUrl}?orderTrackingNo=${orderTrackingNo}`);
-  }
-
-  // Sayfalama için
-  getOrdersWithPagination(page: number, limit: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.dataTableApiUrl}?_page=${page}&_limit=${limit}`);
   }
 }

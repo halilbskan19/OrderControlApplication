@@ -1,12 +1,12 @@
 export interface Order {
     Date: string;
-    Statu: number;
+    Statu: string;
     customerName: string;
     district: string;
     id: string;
     orderNo: string;
     orderTrackingNo: string;
     plate: string;
-    releasedForDistribution: number;
+    releasedForDistribution: string;
     shipmentTrackingNo: string;
 }
