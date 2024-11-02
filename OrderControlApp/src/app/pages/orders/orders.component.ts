@@ -21,7 +21,7 @@ export class OrdersComponent implements OnInit {
   ordersData: Order[] = [];
   pagedOrders: Order[] = [];
   allOrdersData: Order[] = [];
-  
+
   // Yükleme ilerlemesini göstermek için değişken
   progress: number = 30;
 
@@ -30,6 +30,9 @@ export class OrdersComponent implements OnInit {
   currentPage: number = 1; // Varsayılan sayfa numarası
   totalPagesArray: number[] = [];
   itemsPerPageOptions: number[] = [5, 10, 20]; // Sayfa başına öğe seçenekleri
+
+  loadingBarCurrentValue: number = 0;
+  loadingBarTotalValue: number = 0;
 
   // Filtreleme ile ilgili değişkenler
   filter: {
@@ -41,14 +44,14 @@ export class OrdersComponent implements OnInit {
     status: Status | null;
     distributionStatus: DistributionStatus | null;
   } = {
-    orderTrackingNo: '',
-    shipmentTrackingNo: '',
-    plate: '',
-    startDate: null,
-    endDate: null,
-    status: null,
-    distributionStatus: null
-  };
+      orderTrackingNo: '',
+      shipmentTrackingNo: '',
+      plate: '',
+      startDate: null,
+      endDate: null,
+      status: null,
+      distributionStatus: null
+    };
 
   // Tarih aralığı formu
   dateRangeFormGroup: FormGroup;
@@ -97,6 +100,7 @@ export class OrdersComponent implements OnInit {
     ).subscribe({
       next: ordersData => {
         this.ordersData = ordersData;
+
         this.allOrdersData = [...ordersData]; // Tüm verilerin yedeğini tutar
         this.updatePagedOrders(); // Sayfalandırılmış verileri günceller
         this.calculateTotalPages(); // Toplam sayfa sayısını hesaplar
@@ -108,12 +112,25 @@ export class OrdersComponent implements OnInit {
     });
   }
 
+  updateOrderStatu(data: string) {
+    const statusText = this.statusOptions
+      .filter(option => option.value === data) // Gelen data ile eşleşen statü kodunu bul
+      .map(option => {
+        // Eşleşen değeri kontrol et
+        return option.label;
+      })[0]; // İlk eşleşeni al
+
+    return statusText;
+  }
+
   private updateProgress(): void {
     if (this.headerData) {
       try {
         const completedOrder = this.headerData.completedOrder || '0/0';
         const [totalValue, currentValue] = completedOrder.split('/').map(Number);
         this.progress = totalValue > 0 ? (currentValue / totalValue) * 100 : 0;
+        this.loadingBarCurrentValue = currentValue;
+        this.loadingBarTotalValue = totalValue;
       } catch (error) {
         console.error('Hata oluştu:', error);
         this.progress = 0; // Hata durumunda ilerlemeyi sıfırlar

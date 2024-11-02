@@ -9,7 +9,7 @@
         <app-badge count="{{headerData?.notDelivered}}" title="Teslim Edilmedi" color="primary"
             size="medium"></app-badge>
         <div class="last-item">
-            <app-loading-bar [progress]="progress"></app-loading-bar>
+            <app-loading-bar [progress]="progress" [totalValue]="loadingBarTotalValue" [currentValue]="loadingBarCurrentValue"></app-loading-bar>
         </div>
     </div>
 
@@ -89,7 +89,8 @@
                         <td>{{ order.district }}</td>
                         <td>{{ order.plate }}</td>
                         <td>{{ order.releasedForDistribution }}</td>
-                        <td>{{ order.Statu }}</td>
+                        <!-- <td>{{ order.Statu }}</td> -->
+                         <td>{{updateOrderStatu(order.Statu)}}</td>
                         <td>{{ formatDate(order.Date) }}</td>
                         <td><button class="btn btn-secondary"
                                 (click)="navigateToOrderDetails(order.orderTrackingNo)">Sipariş

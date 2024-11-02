@@ -10,6 +10,8 @@ export class LoadingBarComponent {
    * İlerlemenin yüzdesel değeri (0-100 arası). Varsayılan değer 0'dır.
    */
   @Input() progress: number = 0;
+  @Input() currentValue: number = 0;
+  @Input() totalValue: number = 0;
 
   /**
    * İlerlemenin yüzdesel değerini günceller.
